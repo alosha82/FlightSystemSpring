@@ -6,10 +6,11 @@ import com.example.FlightSystemsSpring.entities.Flights;
 import com.example.FlightSystemsSpring.entities.Tickets;
 import com.example.FlightSystemsSpring.logintoken.LoginToken;
 import org.apache.commons.math3.util.Pair;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-
+@Component
 public class CustomerFacade extends AnonymousFacade
 {
 

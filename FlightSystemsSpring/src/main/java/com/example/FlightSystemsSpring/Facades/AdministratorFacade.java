@@ -6,12 +6,14 @@ import com.example.FlightSystemsSpring.logintoken.LoginToken;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Component
 public class AdministratorFacade extends AnonymousFacade
 {
     LoginToken token;

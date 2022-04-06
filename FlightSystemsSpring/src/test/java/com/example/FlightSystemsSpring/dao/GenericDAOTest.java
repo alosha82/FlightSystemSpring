@@ -1,7 +1,7 @@
 package com.example.FlightSystemsSpring.dao;
 
 
-import entities.*;
+import com.example.FlightSystemsSpring.entities.*;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.math3.util.Pair;

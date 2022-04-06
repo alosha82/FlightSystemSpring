@@ -7,13 +7,14 @@ import com.example.FlightSystemsSpring.entities.Customers;
 import com.example.FlightSystemsSpring.entities.Users;
 import com.example.FlightSystemsSpring.logintoken.LoginToken;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Component
 public class AnonymousFacade extends FacadeBase
 {
     /**Joins Users with User_Roles and filters the joined entity by username and password,

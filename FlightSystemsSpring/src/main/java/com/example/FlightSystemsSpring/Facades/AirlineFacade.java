@@ -5,10 +5,11 @@ import com.example.FlightSystemsSpring.entities.AirlineCompanies;
 import com.example.FlightSystemsSpring.entities.Flights;
 import com.example.FlightSystemsSpring.entities.Tickets;
 import com.example.FlightSystemsSpring.logintoken.LoginToken;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-
+@Component
 public class AirlineFacade extends AnonymousFacade
 {
      private LoginToken token;
