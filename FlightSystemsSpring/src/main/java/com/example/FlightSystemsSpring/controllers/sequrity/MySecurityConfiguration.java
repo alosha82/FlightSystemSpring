@@ -68,7 +68,6 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    //TODO ask how can I loop antMatchers on all the roles from the data base?
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 .antMatchers("/Administrator").hasRole("Administrator")

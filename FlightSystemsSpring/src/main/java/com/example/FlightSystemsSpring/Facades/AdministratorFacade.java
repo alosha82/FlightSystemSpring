@@ -1,5 +1,6 @@
 package com.example.FlightSystemsSpring.Facades;
 
+import com.example.FlightSystemsSpring.dao.DAOInstantiation;
 import com.example.FlightSystemsSpring.dao.GenericDAO;
 import com.example.FlightSystemsSpring.entities.*;
 import com.example.FlightSystemsSpring.logintoken.LoginToken;
@@ -17,7 +18,7 @@ import java.util.List;
 public class AdministratorFacade extends AnonymousFacade
 {
     LoginToken token;
-    GenericDAO<Administrators> administratorsDAO = new GenericDAO<>("Administrators",new Administrators());
+    GenericDAO<Administrators> administratorsDAO = DAOInstantiation.getAdministratorsDAO();
     Administrators administrators;
     public AdministratorFacade(LoginToken token) throws Exception{
         this.token = token;
@@ -38,7 +39,7 @@ public class AdministratorFacade extends AnonymousFacade
         if(administrators==null)
             throw new Exception("No administrators with your id");
         ArrayList<Customers> customers;
-        GenericDAO<Customers> customersDAO = new GenericDAO<>("Customers", new Customers());
+        GenericDAO<Customers> customersDAO = DAOInstantiation.getCustomersDAO();
         customers = customersDAO.getAll();
         customersDAO.closeAllDAOConnections();
         return customers;
@@ -87,9 +88,9 @@ public class AdministratorFacade extends AnonymousFacade
         if(administrators==null)
             throw new Exception("No administrators with your id");
         ArrayList<Tickets> customerTickets;
-        GenericDAO<Customers> customersDAO = new GenericDAO<>("Customers",new Customers());
-        GenericDAO<Tickets> ticketsDAO = new GenericDAO<>("Tickets",new Tickets());
-        GenericDAO<Users> usersDAO = new GenericDAO<>("Users",new Users());
+        GenericDAO<Customers> customersDAO = DAOInstantiation.getCustomersDAO();
+        GenericDAO<Tickets> ticketsDAO = DAOInstantiation.getTicketsDAO();
+        GenericDAO<Users> usersDAO = DAOInstantiation.getUsersDAO();
         if (customer.getId()==null)
             System.out.println("Id must be provided inside the customer. No removal was made in the DataBase");
         else {
@@ -116,9 +117,9 @@ public class AdministratorFacade extends AnonymousFacade
             throw new Exception("No administrators with your id");
         ArrayList<Flights> airlineFlights;
         GenericDAO<AirlineCompanies> airlineCompaniesDAO = new GenericDAO<>("Airline_Companies",new AirlineCompanies());
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
-        GenericDAO<Tickets> ticketsDAO = new GenericDAO<>("Tickets",new Tickets());
-        GenericDAO<Users> usersDAO = new GenericDAO<>("Users",new Users());
+        GenericDAO<Flights> flightsDAO = DAOInstantiation.getFlightsDAO();
+        GenericDAO<Tickets> ticketsDAO = DAOInstantiation.getTicketsDAO();
+        GenericDAO<Users> usersDAO = DAOInstantiation.getUsersDAO();
         if (airlineCompany.getId()==null)
             System.out.println("Id must be provided inside the airlineCompany. No removal was made in the DataBase");
         else {
@@ -149,8 +150,8 @@ public class AdministratorFacade extends AnonymousFacade
     {
         if(administrators==null)
             throw new Exception("No administrators with your id");
-        GenericDAO<Administrators> administratorsDAO = new GenericDAO<>("Administrators",new Administrators());
-        GenericDAO<Users> usersDAO = new GenericDAO<>("Users",new Users());
+        GenericDAO<Administrators> administratorsDAO = DAOInstantiation.getAdministratorsDAO();
+        GenericDAO<Users> usersDAO = DAOInstantiation.getUsersDAO();
         if (administrator.getId()==null)
             System.out.println("Id must be provided inside the administrator. No removal was made in the DataBase");
         else {
