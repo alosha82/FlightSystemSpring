@@ -15,7 +15,6 @@ import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
 
 @Getter
 @Setter
-@Component
 public class AdministratorFacade extends AnonymousFacade
 {
     LoginToken token;

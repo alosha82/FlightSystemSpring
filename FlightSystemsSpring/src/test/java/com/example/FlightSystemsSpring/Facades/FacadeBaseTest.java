@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FacadeBaseTest {
@@ -237,15 +238,15 @@ class FacadeBaseTest {
 //        x.createNewUser(newUserToAdd1,newAdministratorToAdd);
 //        x.createNewUser(newUserToAdd2,newAirlineToAdd);
 //        x.createNewUser(newUserToAdd3,newCustomerToAdd);
-        GenericDAO<Users> usersDAO = new GenericDAO<>("Users",new Users());
+        GenericDAO<Users> usersDAO = GenericDAO.getUsersDAO();
         getUser1=usersDAO.getById(10);
         getUser2=usersDAO.getById(11);
         getUser3=usersDAO.getById(12);
-        GenericDAO<Administrators> administratorsDAO = new GenericDAO<>("Administrators",new Administrators());
+        GenericDAO<Administrators> administratorsDAO = getAdministratorsDAO();
         getAdministrator=administratorsDAO.getById(3);
-        GenericDAO<AirlineCompanies> airlineCompaniesDAO = new GenericDAO<>("Airline_Companies",new AirlineCompanies());
+        GenericDAO<AirlineCompanies> airlineCompaniesDAO = getAirlineCompaniesDAO();
         getAirlineCompany=airlineCompaniesDAO.getById(3);
-        GenericDAO<Customers> customersDAO = new GenericDAO<>("Customers",new Customers());
+        GenericDAO<Customers> customersDAO = getCustomersDAO();
         getCustomer=customersDAO.getById(3);
 
         assertEquals(newUserToAdd1,getUser1);

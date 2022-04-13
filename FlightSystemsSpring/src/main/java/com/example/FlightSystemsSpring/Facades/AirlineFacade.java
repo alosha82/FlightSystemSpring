@@ -11,7 +11,6 @@ import java.util.*;
 
 import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
 
-@Component
 public class AirlineFacade extends AnonymousFacade
 {
      private LoginToken token;

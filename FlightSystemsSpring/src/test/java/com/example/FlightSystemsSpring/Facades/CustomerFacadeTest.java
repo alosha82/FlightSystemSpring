@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CustomerFacadeTest {
@@ -25,7 +26,7 @@ class CustomerFacadeTest {
         loginToken.setName("Vasa");
         loginToken.setRole("Customer");
         CustomerFacade customerFacade= new CustomerFacade(loginToken);
-        GenericDAO<Customers> customersDAO= new GenericDAO<>("Customers",new Customers());
+        GenericDAO<Customers> customersDAO= getCustomersDAO();
         customer=customersDAO.getById(1);
         customer.setLastName(customer.getLastName()+1);
         customerFacade.updateCustomer(customer);
@@ -47,7 +48,7 @@ class CustomerFacadeTest {
         ticket.setFlightId(5);
         ticket.setCostumersId(1);
         customerFacade.addTicket(ticket);
-        GenericDAO<Tickets> ticketsDAO = new GenericDAO<>("Tickets",new Tickets());
+        GenericDAO<Tickets> ticketsDAO = getTicketsDAO();
         assertEquals(ticket, ticketsDAO.getById(5));
     }
 
@@ -79,10 +80,10 @@ class CustomerFacadeTest {
         loginToken.setName("Vasa");
         loginToken.setRole("Customer");
         CustomerFacade customerFacade= new CustomerFacade(loginToken);
-        GenericDAO<Customers> customersDAO= new GenericDAO<>("Customers",new Customers());
+        GenericDAO<Customers> customersDAO= getCustomersDAO();
         customer=customersDAO.getById(1);
         flights = customerFacade.getFlightsByCustomer(customer);
-        GenericDAO<Flights> flightsDAO= new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO= getFlightsDAO();
         flightsForTest=flightsDAO.getById(4);
         assertEquals(flightsForTest,flights.get(0));
     }

@@ -12,10 +12,20 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("Administrator")
+
 public class AdministratorController
 {
-    @Autowired
+
     AdministratorFacade administratorFacade;
+
+    {
+        try {
+            administratorFacade = new AdministratorFacade(new LoginToken());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @GetMapping("/getAllCustomers")
     @SneakyThrows
     public ArrayList<Customers> getAllCustomers()

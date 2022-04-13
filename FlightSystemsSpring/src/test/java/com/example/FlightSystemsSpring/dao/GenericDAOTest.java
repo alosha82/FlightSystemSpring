@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Timestamp;
 import java.util.*;
 
+import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GenericDAOTest {
@@ -18,7 +19,7 @@ class GenericDAOTest {
     void getAll()
     {
         ArrayList<UserRoles> userRoles;
-        GenericDAO<UserRoles> userRolesDAO= new GenericDAO<>("User_Roles",new UserRoles());
+        GenericDAO<UserRoles> userRolesDAO= getUserRolesDAO();
         userRoles = userRolesDAO.getAll();
         ArrayList<UserRoles> myUserRoles=new ArrayList<>();
         val userRolesForTest = new UserRoles();
@@ -41,7 +42,7 @@ class GenericDAOTest {
     {
         ArrayList<Users> users= new ArrayList<>();
         ArrayList<Users> testUsers=new ArrayList<>();
-        GenericDAO<Users> usersDAO = new GenericDAO<>("Users",new Users());
+        GenericDAO<Users> usersDAO = getUsersDAO();
         Users userForTest = new Users();
         userForTest.setId(1);
         userForTest.setUserName("someusername");
@@ -59,7 +60,7 @@ class GenericDAOTest {
     void getById()
     {
         UserRoles userRoles;
-        GenericDAO<UserRoles> userRolesDAO= new GenericDAO<>("User_Roles",new UserRoles());
+        GenericDAO<UserRoles> userRolesDAO= getUserRolesDAO();
         userRoles = userRolesDAO.getById(1);
         val userRolesForTest = new UserRoles();
         userRolesForTest.setId(1);
@@ -73,7 +74,7 @@ class GenericDAOTest {
     void getByFieldType()
     {
         UserRoles userRoles;
-        GenericDAO<UserRoles> userRolesDAO= new GenericDAO<>("User_Roles",new UserRoles());
+        GenericDAO<UserRoles> userRolesDAO= getUserRolesDAO();
         userRoles = userRolesDAO.getByFieldType("\'Administrator\'","Role_Name");
         val userRolesForTest = new UserRoles();
         userRolesForTest.setId(1);
@@ -85,7 +86,7 @@ class GenericDAOTest {
     void getByFieldTypeArr()
     {
         ArrayList<UserRoles> userRoles;
-        GenericDAO<UserRoles> userRolesDAO= new GenericDAO<>("User_Roles",new UserRoles());
+        GenericDAO<UserRoles> userRolesDAO= getUserRolesDAO();
         userRoles = userRolesDAO.getByFieldTypeArr("\'Administrator\'","Role_Name");
         ArrayList<UserRoles> myUserRoles=new ArrayList<>();
         val userRolesForTest = new UserRoles();
@@ -99,7 +100,7 @@ class GenericDAOTest {
     @SneakyThrows
     void remove()
     {
-        GenericDAO<Users> usersDAO=new GenericDAO<>("Users",new Users());
+        GenericDAO<Users> usersDAO=getUsersDAO();
         Users newUserToAdd1 = new Users();
         newUserToAdd1.setId(4);
         newUserToAdd1.setUserName("createfromnewuser1");
@@ -134,7 +135,7 @@ class GenericDAOTest {
         flightsForTest.setDepartureTime(Timestamp.valueOf("2022-03-26 23:10:25"));
         flightsForTest.setLandingTime(Timestamp.valueOf("2022-03-26 12:10:25"));
         flightsForTest.setRemainingTickets(100);
-        GenericDAO<Flights> flightsDAO=new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO=getFlightsDAO();
         flightsDAO.add(flightsForTest);
     }
 
@@ -142,7 +143,7 @@ class GenericDAOTest {
     void update()
     {
         Users newUserToAdd3 = new Users();
-        GenericDAO<Users> x =new GenericDAO<>("Users",new Users());
+        GenericDAO<Users> x =getUsersDAO();
         newUserToAdd3.setId(12);
         newUserToAdd3.setUserName("createfromnewuser3");
         newUserToAdd3.setPassword("11111114");
@@ -157,7 +158,7 @@ class GenericDAOTest {
     @Test
     void generateJoinMultipleByQuery()
     {
-        GenericDAO<Flights> t = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> t =getFlightsDAO();
         Map<String, Collection<String>> tablesToColumnsMap=new HashMap<>();
         tablesToColumnsMap.put("Customers", List.of("First_Name", "Last_Name"));
         LinkedHashMap<Pair<String,String>,Pair<String,String>> foreignsToOrigins=new LinkedHashMap<>();
@@ -177,7 +178,7 @@ class GenericDAOTest {
         tablesToColumnsMap.put("Flights", List.of("Id", "Airline_Company_Id",
                 "Origin_Country_Id","Destination_Country_Id",
                 "Departure_Time","Landing_Time","Remaining_Tickets"));
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         flights=flightsDAO.joinTwoBy(tablesToColumnsMap,"Origin_Country_Id","Countries","Id",new Flights());
         val flightsForTest = new Flights();
         flightsForTest.setId(4l);
@@ -198,7 +199,7 @@ class GenericDAOTest {
         tablesToColumnsMap.put("Flights", List.of("Id", "Airline_Company_Id",
                 "Origin_Country_Id","Destination_Country_Id",
                 "Departure_Time","Landing_Time","Remaining_Tickets"));
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         flights=flightsDAO.joinTwoByWithWhereClause(tablesToColumnsMap,"Origin_Country_Id",
                 "Countries","Id",new Flights(),"WHERE \"Countries\".\"Id\"="+1);
         val flightsForTest = new Flights();
@@ -217,7 +218,7 @@ class GenericDAOTest {
     void joinMultipleBy()
     {
         ArrayList<Flights> flights;
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         Map<String, Collection<String>> tablesToColumnsMap=new HashMap<>();
         tablesToColumnsMap.put("Flights", List.of("Id", "Airline_Company_Id",
                 "Origin_Country_Id","Destination_Country_Id",
@@ -241,7 +242,7 @@ class GenericDAOTest {
     void joinMultipleByWithWhereClause()
     {
         ArrayList<Flights> flights;
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         Map<String, Collection<String>> tablesToColumnsMap=new HashMap<>();
         tablesToColumnsMap.put("Flights", List.of("Id", "Airline_Company_Id",
                 "Origin_Country_Id","Destination_Country_Id",

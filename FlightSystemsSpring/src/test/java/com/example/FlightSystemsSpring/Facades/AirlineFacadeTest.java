@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 
+import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AirlineFacadeTest {
@@ -25,7 +26,7 @@ class AirlineFacadeTest {
         loginToken.setName("someairline");
         loginToken.setRole("Airline_Company");
         AirlineFacade airlineFacade= new AirlineFacade(loginToken);
-        GenericDAO<AirlineCompanies> airlineCompaniesDAO= new GenericDAO<>("Airline_Companies",new AirlineCompanies());
+        GenericDAO<AirlineCompanies> airlineCompaniesDAO= getAirlineCompaniesDAO();
         airline=airlineCompaniesDAO.getById(1);
         airline.setName(airline.getName()+1);
         airlineFacade.updateAirline(airline);
@@ -44,7 +45,7 @@ class AirlineFacadeTest {
         loginToken.setName("someairline");
         loginToken.setRole("Airline_Company");
         AirlineFacade airlineFacade= new AirlineFacade(loginToken);
-        GenericDAO<Flights> flightsDAO= new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO= getFlightsDAO();
         flight=flightsDAO.getById(4);
         flight.setRemainingTickets(flight.getRemainingTickets()+1);
         airlineFacade.updateFlight(flight);
@@ -61,7 +62,7 @@ class AirlineFacadeTest {
         loginToken.setName("someairline");
         loginToken.setRole("Airline_Company");
         AirlineFacade airlineFacade= new AirlineFacade(loginToken);
-        GenericDAO<Flights> flightsDAO= new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO= getFlightsDAO();
         val flightsForTest = new Flights();
         flightsForTest.setId(6l);
         flightsForTest.setOriginCountryId(1);

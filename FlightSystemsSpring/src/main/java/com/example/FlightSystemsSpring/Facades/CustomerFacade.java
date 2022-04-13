@@ -12,7 +12,6 @@ import java.util.*;
 
 import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
 
-@Component
 public class CustomerFacade extends AnonymousFacade
 {
 

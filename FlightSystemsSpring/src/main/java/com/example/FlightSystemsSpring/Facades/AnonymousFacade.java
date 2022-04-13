@@ -17,7 +17,6 @@ import java.util.Map;
 
 import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
 
-@Component
 public class AnonymousFacade extends FacadeBase
 {
     /**Joins Users with User_Roles and filters the joined entity by username and password,
