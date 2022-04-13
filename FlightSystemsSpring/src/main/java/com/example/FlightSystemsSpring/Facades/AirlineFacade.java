@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
+
 @Component
 public class AirlineFacade extends AnonymousFacade
 {
@@ -23,7 +25,7 @@ public class AirlineFacade extends AnonymousFacade
     {
         if (this.token.getId()!=airlineCompany.getId())
             throw new Exception("You can not update other airline companies");
-        GenericDAO<AirlineCompanies> airlineCompaniesDAO = new GenericDAO<>("Airline_Companies",new AirlineCompanies());
+        GenericDAO<AirlineCompanies> airlineCompaniesDAO = getAirlineCompaniesDAO();
         if (airlineCompany.getId()==null)
             System.out.println("Id must be provided inside the airlineCompany. No update was made to the DataBase");
         else
@@ -47,7 +49,7 @@ public class AirlineFacade extends AnonymousFacade
     {
         if (token.getId()!=flight.getAirlineCompanyId())
             throw new Exception("You can not update flights of another airline company");
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         if (flight.getId()==null)
             System.out.println("Id must be provided inside the flight. No update was made to the DataBase");
         else
@@ -77,7 +79,7 @@ public class AirlineFacade extends AnonymousFacade
         ArrayList<Flights> flights;
         if (token.getId()!=flight.getAirlineCompanyId())
             throw new Exception("You can not add flights of another airline company");
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         flights=flightsDAO.getAll();
         for (int i = 0; i < flights.size(); i++)
         {
@@ -116,8 +118,8 @@ public class AirlineFacade extends AnonymousFacade
         if (token.getId()!=flight.getAirlineCompanyId())
             throw new Exception("You can not remove flights of another airline company");
         ArrayList<Tickets> flightTickets;
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
-        GenericDAO<Tickets> ticketsDAO = new GenericDAO<>("Tickets",new Tickets());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
+        GenericDAO<Tickets> ticketsDAO = getTicketsDAO();
         if (flight.getId()==null)
             System.out.println("Id must be provided inside the flight. No removal was made in the DataBase");
         else
@@ -147,7 +149,7 @@ public class AirlineFacade extends AnonymousFacade
     public ArrayList<Flights> getMyFlights() throws Exception
     {
         ArrayList<Flights> flights;
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         Map<String, Collection<String>> tablesToColumnsMap=new HashMap<>();
         tablesToColumnsMap.put("Flights", List.of("Id", "Airline_Company_Id","Origin_Country_Id","Destination_Country_Id"
                 ,"Departure_Time","Landing_Time","Remaining_Tickets"));

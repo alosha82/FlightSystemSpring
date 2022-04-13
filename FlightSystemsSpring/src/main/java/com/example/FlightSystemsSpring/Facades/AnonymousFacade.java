@@ -14,6 +14,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
+
 @Component
 public class AnonymousFacade extends FacadeBase
 {
@@ -22,7 +25,7 @@ public class AnonymousFacade extends FacadeBase
     @SneakyThrows
     public AnonymousFacade login(String username,String password) throws Exception
     {
-        GenericDAO<Users> usersDAO = new GenericDAO<>("Users",new Users());
+        GenericDAO<Users> usersDAO =getUsersDAO();
         Map<String, Collection<String>> tablesToColumnsMap=new HashMap<>();
         tablesToColumnsMap.put("Users", List.of("Id", "Username","Password"));
         tablesToColumnsMap.put("User_Roles", List.of("Role_Name"));
@@ -41,19 +44,19 @@ public class AnonymousFacade extends FacadeBase
             {
                 case("Administrator")->
                         {
-                            GenericDAO<Administrators> administratorsDAO=new GenericDAO<>("Administrators",new Administrators());
+                            GenericDAO<Administrators> administratorsDAO=getAdministratorsDAO();
                             loginToken.setId(administratorsDAO.getByFieldType(""+userId,"User_Id").getId());
                             return new AdministratorFacade(loginToken);
                         }
                 case("Customer")->
                         {
-                            GenericDAO<Customers> customersDAO=new GenericDAO<>("Customers",new Customers());
+                            GenericDAO<Customers> customersDAO=getCustomersDAO();
                             loginToken.setId(customersDAO.getByFieldType(""+userId,"User_Id").getId());
                             return new CustomerFacade(loginToken);
                         }
                 case("Airline_Company")->
                         {
-                            GenericDAO<AirlineCompanies> airlineCompaniesDAO=new GenericDAO<>("Airline_Companies",new AirlineCompanies());
+                            GenericDAO<AirlineCompanies> airlineCompaniesDAO=getAirlineCompaniesDAO();
                             loginToken.setId(airlineCompaniesDAO.getByFieldType(""+userId,"User_Id").getId());
                             return new AirlineFacade(loginToken);
                         }

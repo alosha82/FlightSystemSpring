@@ -18,14 +18,110 @@ public class GenericDAO<T extends IEntities>
     private String tableName;
     private T entityType;
     private ArrayList<T> arrayOfEntityType;
-    private PostgresConnection postgresConnection =new PostgresConnection();
-    private Connection connection = postgresConnection.getConnection(dataBaseName,"1");
-    private Statement stm = postgresConnection.getStatement();
+    private PostgresConnection postgresConnection;
+    private Connection connection;
+    private Statement stm;
 
-    public GenericDAO(String tableName, T tableType) {
+    private static GenericDAO<Administrators> administratorsDAO;
+    private static GenericDAO<AirlineCompanies> airlineCompaniesDAO;
+    private static GenericDAO<Countries> countriesDAO;
+    private static GenericDAO<Customers> customersDAO;
+    private static GenericDAO<Flights> flightsDAO;
+    private static GenericDAO<Tickets> ticketsDAO;
+    private static GenericDAO<UserRoles> userRolesDAO;
+    private static GenericDAO<Users> usersDAO;
+
+    public static GenericDAO<Administrators> getAdministratorsDAO()
+    {
+        if (administratorsDAO==null)
+        {
+            administratorsDAO=new GenericDAO<>("Administrators", new Administrators());
+            return administratorsDAO;
+        }
+        return administratorsDAO;
+    }
+
+    public static GenericDAO<AirlineCompanies> getAirlineCompaniesDAO()
+    {
+        if (airlineCompaniesDAO==null)
+        {
+            airlineCompaniesDAO=new GenericDAO<>("Airline_Companies", new AirlineCompanies());
+            return airlineCompaniesDAO;
+        }
+        return airlineCompaniesDAO;
+    }
+
+    public static GenericDAO<Countries> getCountriesDAO()
+    {
+        if (countriesDAO==null)
+        {
+            countriesDAO=new GenericDAO<>("Countries", new Countries());
+            return countriesDAO;
+        }
+        return countriesDAO;
+    }
+
+    public static GenericDAO<Customers> getCustomersDAO()
+    {
+        if (customersDAO==null)
+        {
+            customersDAO=new GenericDAO<>("Customers", new Customers());
+            return customersDAO;
+        }
+        return customersDAO;
+    }
+
+    public static GenericDAO<Flights> getFlightsDAO()
+    {
+        if (flightsDAO==null)
+        {
+            flightsDAO=new GenericDAO<>("Flights", new Flights());
+            return flightsDAO;
+        }
+        return flightsDAO;
+    }
+
+    public static GenericDAO<Tickets> getTicketsDAO()
+    {
+        if (ticketsDAO==null)
+        {
+            ticketsDAO=new GenericDAO<>("Tickets", new Tickets());
+            return ticketsDAO;
+        }
+        return ticketsDAO;
+    }
+
+    public static GenericDAO<UserRoles> getUserRolesDAO()
+    {
+        if (userRolesDAO==null)
+        {
+            userRolesDAO=new GenericDAO<>("User_Roles", new UserRoles());
+            return userRolesDAO;
+        }
+        return userRolesDAO;
+    }
+
+    public static GenericDAO<Users> getUsersDAO()
+    {
+        if (usersDAO==null)
+        {
+            usersDAO=new GenericDAO<>("Users", new Users());
+            return usersDAO;
+        }
+        return usersDAO;
+    }
+
+    private GenericDAO(String tableName, T tableType) {
         this.tableName=tableName;
         this.entityType = tableType;
         this.arrayOfEntityType = new ArrayList<>();
+    }
+
+    public void OpenDAOConnection()
+    {
+        this.postgresConnection =new PostgresConnection();
+        this.connection = postgresConnection.getConnection(dataBaseName,"1");
+        this.stm = postgresConnection.getStatement();
     }
 
     @SneakyThrows
@@ -38,7 +134,7 @@ public class GenericDAO<T extends IEntities>
     }
     public ArrayList<T> getAllWithWhereClause(String whereClause)
     {
-
+        OpenDAOConnection();
         arrayOfEntityType=executeQueryAndSaveInTheProperEntity("select * from "+quote(tableName)+" "+whereClause,entityType);
         return arrayOfEntityType;
     }
@@ -48,6 +144,7 @@ public class GenericDAO<T extends IEntities>
      * the caller needs to close the ResultSet connection */
     public ResultSet runSQLFunctionGetResultSet(String functionName, List<String> properlyFormattedParameters)
     {
+        OpenDAOConnection();
         String stringToExecute ="SELECT * FROM "+functionName+"(";
         for (int i = 0; i < properlyFormattedParameters.size(); i++) {
             stringToExecute=stringToExecute+properlyFormattedParameters.get(i)+",";
@@ -85,6 +182,7 @@ public class GenericDAO<T extends IEntities>
      * Returns:  DAO's type(entity)  */
     public T getByFieldType(String formattedByPostgresSQLStandardsParameter,String fieldName)
     {
+        OpenDAOConnection();
         Cloner cloner = new Cloner();
         String tempString="";
         if (fieldName.contains("("))
@@ -122,6 +220,7 @@ public class GenericDAO<T extends IEntities>
 //    @SneakyThrows
     public boolean remove(T typeOfEntity)
     {
+        OpenDAOConnection();
         try {
             stm.executeUpdate("DELETE from " + quote(tableName) + " WHERE " + quote("Id") + "=" + typeOfEntity.getId());
         }catch (Exception e) {return false;}
@@ -134,6 +233,7 @@ public class GenericDAO<T extends IEntities>
      * Will fail if the entity has the same values for the columns marked unique  */
     public void add(T typeOfEntity)
     {
+        OpenDAOConnection();
         LinkedHashMap<String,String>  fieldsAndValuesInStringForm = typeOfEntity.getAllNeededValuesExceptIdInStringFormat();
         String stringForExecution = "INSERT INTO "+quote(tableName)+" ("
                 + fieldsAndValuesInStringForm.keySet().stream().map(this::quote).collect(Collectors.joining(","))
@@ -146,6 +246,7 @@ public class GenericDAO<T extends IEntities>
      * Can fail*/
     public void update(T typeOfEntity,long id)
     {
+        OpenDAOConnection();
         LinkedHashMap<String,String>  fieldsAndValuesInStringForm = typeOfEntity.getAllNeededValuesExceptIdInStringFormat();
         String stringForUpdate ="UPDATE "+quote(tableName)+" SET ";
         stringForUpdate = stringForUpdate+ fieldsAndValuesInStringForm.entrySet().stream().map((K)-> quote(K.getKey())+"="+K.getValue())
@@ -172,7 +273,7 @@ public class GenericDAO<T extends IEntities>
                                               LinkedHashMap<Pair<String, String>, Pair<String, String>> foreignFieldToOriginalField,
                                               String whereClause)
     {
-
+        OpenDAOConnection();
         val selectContents = "SELECT " + tablesToColumnsMap.entrySet().stream()
                         .map(e -> e.getValue().stream()
                                 .map(colName -> strDotStrQuoted(e.getKey(),colName))
@@ -206,6 +307,7 @@ public class GenericDAO<T extends IEntities>
     /** Executes a query and saves the result in an array list of the received entity type. Note: the type may not be the same as the DAO's*/
     private <V extends IEntities> ArrayList<V> executeQueryAndSaveInTheProperEntity(String query,V typeOfEntity)
     {
+        OpenDAOConnection();
         Cloner cloner = new Cloner();
         ArrayList<V> ArrayListOfTypeOfEntity=new ArrayList<>();
         ResultSet result= stm.executeQuery(query);

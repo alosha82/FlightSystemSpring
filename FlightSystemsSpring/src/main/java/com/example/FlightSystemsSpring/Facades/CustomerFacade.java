@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
+
 @Component
 public class CustomerFacade extends AnonymousFacade
 {
@@ -25,7 +27,7 @@ public class CustomerFacade extends AnonymousFacade
     {
         if (this.token.getId()!=customer.getId())
             throw new Exception("You can not update other customers");
-        GenericDAO<Customers> customersDAO = new GenericDAO<>("Customers",new Customers());
+        GenericDAO<Customers> customersDAO = getCustomersDAO();
         if (customer.getId()==null)
             System.out.println("Id must be provided inside the customer. No update was made to the DataBase");
         else
@@ -38,8 +40,8 @@ public class CustomerFacade extends AnonymousFacade
         if (token.getId()!=ticket.getCostumersId())
             throw new Exception("You can not add tickets of another customer");
         ArrayList<Tickets> tickets;
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
-        GenericDAO<Tickets> ticketsDAO = new GenericDAO<>("Tickets",new Tickets());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
+        GenericDAO<Tickets> ticketsDAO = getTicketsDAO();
         tickets=ticketsDAO.getAll();
         for (int i = 0; i < tickets.size(); i++)
         {
@@ -60,8 +62,8 @@ public class CustomerFacade extends AnonymousFacade
     {
         if (token.getId()!=ticket.getCostumersId())
             throw new Exception("You can not remove tickets of another customer");
-        GenericDAO<Tickets> ticketsDAO = new GenericDAO<>("Tickets",new Tickets());
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Tickets> ticketsDAO = getTicketsDAO();
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         if (ticket.getId()==null)
             System.out.println("Id must be provided inside the ticket. No removal was made in the DataBase");
         else
@@ -83,7 +85,7 @@ public class CustomerFacade extends AnonymousFacade
             throw new Exception("You can not remove tickets of another customer");
         ArrayList<Flights> flights;
         Map<String,Collection<String>> tablesToColumnsMap=new HashMap<>();
-        GenericDAO<Flights> flightDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightDAO = getFlightsDAO();
         tablesToColumnsMap.put("Flights", List.of("Id", "Airline_Company_Id","Origin_Country_Id","Destination_Country_Id"
                 ,"Departure_Time","Landing_Time","Remaining_Tickets"));
         LinkedHashMap<Pair<String,String>,Pair<String,String>> foreignsToOrigins=new LinkedHashMap<>();
@@ -100,7 +102,7 @@ public class CustomerFacade extends AnonymousFacade
     public ArrayList<Tickets> getMyTickets() throws Exception
     {
         ArrayList<Tickets> tickets;
-        GenericDAO<Tickets> ticketsDAO = new GenericDAO<>("Tickets",new Tickets());
+        GenericDAO<Tickets> ticketsDAO = getTicketsDAO();
         Map<String, Collection<String>> tablesToColumnsMap=new HashMap<>();
         tablesToColumnsMap.put("Tickets", List.of("Id", "Flight_Id","Customer_Id"));
         if (token.getId()==null)

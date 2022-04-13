@@ -9,12 +9,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
+
 public abstract class FacadeBase
 {
     /**Runs a function created in the pg4admin(SQL). Returns: Flights By Parameters: origin country, destination country, date plus time*/
     public  ArrayList<Flights> getFlightsByParameters(int origin_country_id, int destination_country_id, Timestamp date)
     {
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights", new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         ArrayList<String> parameters =new ArrayList<>();
         parameters.add(""+origin_country_id);
         parameters.add(""+destination_country_id);
@@ -26,7 +28,7 @@ public abstract class FacadeBase
     /**Returns: airline By country. a.k.a getAirlineByCountryId*/
     public  ArrayList<AirlineCompanies> getAirlineByParameters(int countryId)
     {
-        GenericDAO<AirlineCompanies> airlineCompaniesDAO = new GenericDAO<>("Airline_Companies", new AirlineCompanies());
+        GenericDAO<AirlineCompanies> airlineCompaniesDAO = getAirlineCompaniesDAO();
         ArrayList<AirlineCompanies> listOfAirlinesByCountry=airlineCompaniesDAO.getByFieldTypeArr(""+countryId,"Country_Id");
         airlineCompaniesDAO.closeAllDAOConnections();
         return listOfAirlinesByCountry;
@@ -35,7 +37,7 @@ public abstract class FacadeBase
     public ArrayList<Flights> getAllFlights()
     {
         ArrayList<Flights> flights;
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights", new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         flights=flightsDAO.getAll();
         flightsDAO.closeAllDAOConnections();
         return flights;
@@ -44,7 +46,7 @@ public abstract class FacadeBase
     public Flights getFlightById(int id)
     {
         Flights flight;
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights", new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         flight = flightsDAO.getById(id);
         flightsDAO.closeAllDAOConnections();
         return flight;
@@ -53,7 +55,7 @@ public abstract class FacadeBase
     public ArrayList<AirlineCompanies> getAllAirlines()
     {
         ArrayList<AirlineCompanies> airlineCompanies;
-        GenericDAO<AirlineCompanies> airlineCompaniesDAO = new GenericDAO<>("Airline_Companies", new AirlineCompanies());
+        GenericDAO<AirlineCompanies> airlineCompaniesDAO = getAirlineCompaniesDAO();
         airlineCompanies=airlineCompaniesDAO.getAll();
         airlineCompaniesDAO.closeAllDAOConnections();
         return airlineCompanies;
@@ -62,7 +64,7 @@ public abstract class FacadeBase
     public AirlineCompanies getAirlineById(int id)
     {
         AirlineCompanies airlineCompany;
-        GenericDAO<AirlineCompanies> airlineCompaniesDAO = new GenericDAO<>("Airline_Companies", new AirlineCompanies());
+        GenericDAO<AirlineCompanies> airlineCompaniesDAO = getAirlineCompaniesDAO();
         airlineCompany=airlineCompaniesDAO.getById(id);
         airlineCompaniesDAO.closeAllDAOConnections();
         return airlineCompany;
@@ -70,7 +72,7 @@ public abstract class FacadeBase
     /**Returns: flights by Origin Country*/
     public  ArrayList<Flights>getFlightsByOriginCountryId(int origin_country_id)
     {
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights", new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         ArrayList<Flights> listOfFlights=flightsDAO.getByFieldTypeArr(""+origin_country_id,"Origin_Country_Id");
         flightsDAO.closeAllDAOConnections();
         return listOfFlights;
@@ -78,7 +80,7 @@ public abstract class FacadeBase
     /**Returns: flights by Destination Country*/
     public  ArrayList<Flights>getFlightsByDestinationCountryId(int destination_country_id)
     {
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights", new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         ArrayList<Flights> listOfFlights=flightsDAO.getByFieldTypeArr(""+destination_country_id,"Destination_Country_Id");
         flightsDAO.closeAllDAOConnections();
         return listOfFlights;
@@ -87,7 +89,7 @@ public abstract class FacadeBase
     public  ArrayList<Flights> getFlightsByDepartureDate(Timestamp date)
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights", new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         ArrayList<Flights> listOfFlightsByDepartureDate=flightsDAO.getByFieldTypeArr
                 ("\'"+dateFormat.format(date)+"\'","DATE(\"Departure_Time\")");
         flightsDAO.closeAllDAOConnections();
@@ -97,7 +99,7 @@ public abstract class FacadeBase
     public  ArrayList<Flights> getFlightsByLandingDate(Timestamp date)
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights", new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         ArrayList<Flights> listOfFlightsByDepartureDate=flightsDAO.getByFieldTypeArr
                 ("\'"+dateFormat.format(date)+"\'","DATE(\"Landing_Time\")");
         flightsDAO.closeAllDAOConnections();
@@ -107,7 +109,7 @@ public abstract class FacadeBase
     public ArrayList<Countries> getAllCountries()
     {
         ArrayList<Countries> countries;
-        GenericDAO<Countries> countriesDAO = new GenericDAO<>("Countries", new Countries());
+        GenericDAO<Countries> countriesDAO = getCountriesDAO();
         countries=countriesDAO.getAll();
         countriesDAO.closeAllDAOConnections();
         return countries;
@@ -116,7 +118,7 @@ public abstract class FacadeBase
     public Countries getCountry(int id)
     {
         Countries country;
-        GenericDAO<Countries> countriesDAO = new GenericDAO<>("Countries", new Countries());
+        GenericDAO<Countries> countriesDAO = getCountriesDAO();
         country=countriesDAO.getById(id);
         countriesDAO.closeAllDAOConnections();
         return country;
@@ -126,7 +128,7 @@ public abstract class FacadeBase
     @SneakyThrows
     public <T extends IEntities> void createNewUser (Users user, T entityOfRole)
     {
-        GenericDAO<Users> usersDAO =new GenericDAO<>("Users", new Users());
+        GenericDAO<Users> usersDAO =getUsersDAO();
         if(entityOfRole instanceof Customers)
         {
             String x = getUserRoleName(user);
@@ -142,7 +144,7 @@ public abstract class FacadeBase
             {
                 throw new Exception("User Exists");
             }
-            GenericDAO<Customers> customerDAO =new GenericDAO<>("Customers", new Customers());
+            GenericDAO<Customers> customerDAO =getCustomersDAO();
             Users userIdAfterSet = usersDAO.getByFieldType(user.getUserName(),"Username");
             ((Customers) entityOfRole).setUserId(userIdAfterSet.getId());
             try {
@@ -171,7 +173,7 @@ public abstract class FacadeBase
             {
                 throw new Exception("User Exists");
             }
-            GenericDAO<Administrators> administratorDAO =new GenericDAO<>("Administrators", new Administrators());
+            GenericDAO<Administrators> administratorDAO =getAdministratorsDAO();
             Users userIdAfterSet = usersDAO.getByFieldType(user.getUserName(),"Username");
             ((Administrators) entityOfRole).setUserId(userIdAfterSet.getId());
             try {
@@ -199,7 +201,7 @@ public abstract class FacadeBase
             {
                 throw new Exception("User Exists");
             }
-            GenericDAO<AirlineCompanies> airlineCompaniesDAO =new GenericDAO<>("Airline_Companies", new AirlineCompanies());
+            GenericDAO<AirlineCompanies> airlineCompaniesDAO =getAirlineCompaniesDAO();
             Users userIdAfterSet = usersDAO.getByFieldType(user.getUserName(),"Username");
             ((AirlineCompanies) entityOfRole).setUserId(userIdAfterSet.getId());
             try {
@@ -223,7 +225,7 @@ public abstract class FacadeBase
     /**Get user role name*/
     private String getUserRoleName(Users user)
     {
-        GenericDAO<UserRoles> userRolesDAO =new GenericDAO<>("User_Roles", new UserRoles());
+        GenericDAO<UserRoles> userRolesDAO =getUserRolesDAO();
         if (user.getUserRole()==null)
         {
             System.out.println("The user provided has no role id. Can not perform the necessary checks.");
@@ -235,7 +237,7 @@ public abstract class FacadeBase
     public ArrayList<Tickets> getTicketsByCustomer(Customers customer) throws Exception
     {
         ArrayList<Tickets> tickets;
-        GenericDAO<Tickets> ticketsDAO = new GenericDAO<>("Tickets",new Tickets());
+        GenericDAO<Tickets> ticketsDAO = getTicketsDAO();
         if (customer.getId()==null)
         {
             ticketsDAO.closeAllDAOConnections();
@@ -252,7 +254,7 @@ public abstract class FacadeBase
     public ArrayList<Tickets> getTicketsByFlight(Flights flight)
     {
         ArrayList<Tickets> tickets;
-        GenericDAO<Tickets> ticketsDAO = new GenericDAO<>("Tickets",new Tickets());
+        GenericDAO<Tickets> ticketsDAO = getTicketsDAO();
         if (flight.getId()==null)
         {
             ticketsDAO.closeAllDAOConnections();
@@ -270,7 +272,7 @@ public abstract class FacadeBase
     public ArrayList<Flights> getFlightsByAirlineCompany(AirlineCompanies airline) throws Exception
     {
         ArrayList<Flights> flights;
-        GenericDAO<Flights> flightsDAO = new GenericDAO<>("Flights",new Flights());
+        GenericDAO<Flights> flightsDAO = getFlightsDAO();
         if (airline.getId()==null)
         {
             flightsDAO.closeAllDAOConnections();

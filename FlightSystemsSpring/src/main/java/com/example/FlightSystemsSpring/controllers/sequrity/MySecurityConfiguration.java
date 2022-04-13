@@ -4,6 +4,7 @@ import com.example.FlightSystemsSpring.dao.GenericDAO;
 
 import com.example.FlightSystemsSpring.entities.Users;
 
+import com.example.FlightSystemsSpring.logintoken.LoginToken;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,24 +14,31 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.util.*;
+
+import static com.example.FlightSystemsSpring.dao.GenericDAO.getUsersDAO;
 
 @EnableWebSecurity
 public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("1")
-//                .password("1")
-//                .roles("USER");
-//        // admin
-//        // customer
-//        // anonymous
-//        // publisher
-//        // editor
-//        // readers
-//    }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception
+    {
+        GenericDAO<Users> usersDAO =getUsersDAO();
+        Map<String, Collection<String>> tablesToColumnsMap=new HashMap<>();
+        tablesToColumnsMap.put("Users", List.of("Id", "Username","Password"));
+        tablesToColumnsMap.put("User_Roles", List.of("Role_Name"));
+
+        ResultSet joined = usersDAO.joinTwoByGetResultSet(tablesToColumnsMap,"User_Role","User_Roles","Id");
+        while (joined.next())
+        {
+            auth.inMemoryAuthentication()
+                    .withUser(joined.getString("Username"))
+                    .password(joined.getString("Password"))
+                    .roles(joined.getString("Role_Name"));
+        }
+    }
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception
 //    {
@@ -53,20 +61,10 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        // editor
 //        // readers
 //    }
-//    @Bean
-//    public PasswordEncoder getpassEncoder(){
-//        return NoOpPasswordEncoder.getInstance();
-//    }
-
-    public ArrayList<Users> getUsers()
-    {
-        GenericDAO<Users> userDAO = new GenericDAO<>("Users",new Users());
-        ArrayList<Users> users;
-        users=userDAO.getAll();
-
-        return users;
+    @Bean
+    public PasswordEncoder getpassEncoder(){
+        return NoOpPasswordEncoder.getInstance();
     }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
