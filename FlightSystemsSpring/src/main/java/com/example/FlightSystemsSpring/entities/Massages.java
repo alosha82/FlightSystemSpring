@@ -12,14 +12,13 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="Massages")
 @Entity //Data Transfer Object
 public class Massages
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
-    private int massageId ;
+    private Long massageId ;
     private String senderName;
     private String content;
-
 }

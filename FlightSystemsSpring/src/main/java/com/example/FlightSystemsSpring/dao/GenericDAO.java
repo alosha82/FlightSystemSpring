@@ -117,7 +117,7 @@ public class GenericDAO<T extends IEntities>
         this.arrayOfEntityType = new ArrayList<>();
     }
 
-    public void OpenDAOConnection()
+    public void openDAOConnection()
     {
         this.postgresConnection =new PostgresConnection();
         this.connection = postgresConnection.getConnection(dataBaseName,"1");
@@ -134,7 +134,7 @@ public class GenericDAO<T extends IEntities>
     }
     public ArrayList<T> getAllWithWhereClause(String whereClause)
     {
-        OpenDAOConnection();
+        openDAOConnection();
         arrayOfEntityType=executeQueryAndSaveInTheProperEntity("select * from "+quote(tableName)+" "+whereClause,entityType);
         return arrayOfEntityType;
     }
@@ -144,7 +144,7 @@ public class GenericDAO<T extends IEntities>
      * the caller needs to close the ResultSet connection */
     public ResultSet runSQLFunctionGetResultSet(String functionName, List<String> properlyFormattedParameters)
     {
-        OpenDAOConnection();
+        openDAOConnection();
         String stringToExecute ="SELECT * FROM "+functionName+"(";
         for (int i = 0; i < properlyFormattedParameters.size(); i++) {
             stringToExecute=stringToExecute+properlyFormattedParameters.get(i)+",";
@@ -182,7 +182,7 @@ public class GenericDAO<T extends IEntities>
      * Returns:  DAO's type(entity)  */
     public T getByFieldType(String formattedByPostgresSQLStandardsParameter,String fieldName)
     {
-        OpenDAOConnection();
+        openDAOConnection();
         Cloner cloner = new Cloner();
         String tempString="";
         if (fieldName.contains("("))
@@ -220,7 +220,7 @@ public class GenericDAO<T extends IEntities>
 //    @SneakyThrows
     public boolean remove(T typeOfEntity)
     {
-        OpenDAOConnection();
+        openDAOConnection();
         try {
             stm.executeUpdate("DELETE from " + quote(tableName) + " WHERE " + quote("Id") + "=" + typeOfEntity.getId());
         }catch (Exception e) {return false;}
@@ -233,7 +233,7 @@ public class GenericDAO<T extends IEntities>
      * Will fail if the entity has the same values for the columns marked unique  */
     public void add(T typeOfEntity)
     {
-        OpenDAOConnection();
+        openDAOConnection();
         LinkedHashMap<String,String>  fieldsAndValuesInStringForm = typeOfEntity.getAllNeededValuesExceptIdInStringFormat();
         String stringForExecution = "INSERT INTO "+quote(tableName)+" ("
                 + fieldsAndValuesInStringForm.keySet().stream().map(this::quote).collect(Collectors.joining(","))
@@ -246,7 +246,7 @@ public class GenericDAO<T extends IEntities>
      * Can fail*/
     public void update(T typeOfEntity,long id)
     {
-        OpenDAOConnection();
+        openDAOConnection();
         LinkedHashMap<String,String>  fieldsAndValuesInStringForm = typeOfEntity.getAllNeededValuesExceptIdInStringFormat();
         String stringForUpdate ="UPDATE "+quote(tableName)+" SET ";
         stringForUpdate = stringForUpdate+ fieldsAndValuesInStringForm.entrySet().stream().map((K)-> quote(K.getKey())+"="+K.getValue())
@@ -273,7 +273,7 @@ public class GenericDAO<T extends IEntities>
                                               LinkedHashMap<Pair<String, String>, Pair<String, String>> foreignFieldToOriginalField,
                                               String whereClause)
     {
-        OpenDAOConnection();
+        openDAOConnection();
         val selectContents = "SELECT " + tablesToColumnsMap.entrySet().stream()
                         .map(e -> e.getValue().stream()
                                 .map(colName -> strDotStrQuoted(e.getKey(),colName))
@@ -307,7 +307,7 @@ public class GenericDAO<T extends IEntities>
     /** Executes a query and saves the result in an array list of the received entity type. Note: the type may not be the same as the DAO's*/
     private <V extends IEntities> ArrayList<V> executeQueryAndSaveInTheProperEntity(String query,V typeOfEntity)
     {
-        OpenDAOConnection();
+        openDAOConnection();
         Cloner cloner = new Cloner();
         ArrayList<V> ArrayListOfTypeOfEntity=new ArrayList<>();
         ResultSet result= stm.executeQuery(query);

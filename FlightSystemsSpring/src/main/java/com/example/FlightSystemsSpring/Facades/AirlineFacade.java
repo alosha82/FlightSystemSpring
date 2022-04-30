@@ -5,7 +5,7 @@ import com.example.FlightSystemsSpring.entities.AirlineCompanies;
 import com.example.FlightSystemsSpring.entities.Flights;
 import com.example.FlightSystemsSpring.entities.Tickets;
 import com.example.FlightSystemsSpring.logintoken.LoginToken;
-import org.springframework.stereotype.Component;
+
 
 import java.util.*;
 
@@ -15,16 +15,28 @@ public class AirlineFacade extends AnonymousFacade
 {
      private LoginToken token;
 
-    public AirlineFacade(LoginToken loginToken)
-    {
-        this.token = loginToken;
+    GenericDAO<AirlineCompanies> airlineCompaniesDAO = getAirlineCompaniesDAO();
+    AirlineCompanies airlineCompany;
+    /**Checks if there is an airline company with a given user id.
+     * If there is updates the token id to be the id of the airline company*/
+    public AirlineFacade(LoginToken token) throws Exception{
+        this.token = token;
+        try
+        {
+            airlineCompany = airlineCompaniesDAO.getByFieldType(token.getId().toString(),"User_Id");
+            this.token.setId(airlineCompany.getId());
+        }
+        catch (Exception e)
+        {
+            throw new Exception("No airline with your id");
+        }
     }
+
     /**Updates Airline.*/
     public void updateAirline (AirlineCompanies airlineCompany) throws Exception
     {
         if (this.token.getId()!=airlineCompany.getId())
             throw new Exception("You can not update other airline companies");
-        GenericDAO<AirlineCompanies> airlineCompaniesDAO = getAirlineCompaniesDAO();
         if (airlineCompany.getId()==null)
             System.out.println("Id must be provided inside the airlineCompany. No update was made to the DataBase");
         else

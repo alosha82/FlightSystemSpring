@@ -13,18 +13,22 @@ import java.util.List;
 
 import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
 
-@Getter
+
 @Setter
 public class AdministratorFacade extends AnonymousFacade
 {
+    @Getter
     LoginToken token;
     GenericDAO<Administrators> administratorsDAO = getAdministratorsDAO();
     Administrators administrators;
+    /**Checks if there is an administrator company with a given user id.
+     * If there is updates the token id to be the id of the administrator*/
     public AdministratorFacade(LoginToken token) throws Exception{
         this.token = token;
         try
         {
-            administrators = administratorsDAO.getById(token.getId());
+            administrators = administratorsDAO.getByFieldType(token.getId().toString(),"User_Id");
+            this.token.setId(administrators.getId());
         }
         catch (Exception e)
         {

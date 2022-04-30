@@ -5,6 +5,7 @@ import com.example.FlightSystemsSpring.services.MassageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+@RestController
 @RequestMapping("ContactUs")
 public class MassageController
 {
@@ -16,7 +17,7 @@ public class MassageController
         return massageService.getAllMessages();
     }
     @GetMapping("/massages/{id}")
-    public Massages get(@PathVariable int id){
+    public Massages get(@PathVariable Long id){
         var res= massageService.getMessage(id);
         return (res != null ? res:new Massages());
     }

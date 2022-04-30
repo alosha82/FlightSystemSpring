@@ -3,10 +3,11 @@ package com.example.FlightSystemsSpring.services;
 import com.example.FlightSystemsSpring.entities.Massages;
 import com.example.FlightSystemsSpring.repositoryJPA.MassageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class MassageService
 {
     @Autowired
@@ -18,7 +19,7 @@ public class MassageService
         return massages;
     }
 
-    public Massages getMessage(int id) {
+    public Massages getMessage(Long id) {
         var res = massageRepo.findById(id);
         return res.orElse(null);
     }

@@ -6,19 +6,32 @@ import com.example.FlightSystemsSpring.entities.Flights;
 import com.example.FlightSystemsSpring.entities.Tickets;
 import com.example.FlightSystemsSpring.logintoken.LoginToken;
 import org.apache.commons.math3.util.Pair;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 import static com.example.FlightSystemsSpring.dao.GenericDAO.*;
+import static com.example.FlightSystemsSpring.dao.GenericDAO.getCustomersDAO;
 
 public class CustomerFacade extends AnonymousFacade
 {
 
     private LoginToken token;
-    public CustomerFacade(LoginToken loginToken)
-    {
-        this.token = loginToken;
+
+    GenericDAO<Customers> customersDAO = getCustomersDAO();
+    Customers customer;
+    /**Checks if there is a customer with a given user id.
+     * If there is updates the token id to be the id of the customer*/
+    public CustomerFacade (LoginToken token) throws Exception{
+        this.token = token;
+        try
+        {
+            customer = customersDAO.getByFieldType(token.getId().toString(),"User_Id");
+            this.token.setId(customer.getId());
+        }
+        catch (Exception e)
+        {
+            throw new Exception("No customer with your id");
+        }
     }
 
     /**Updates customer.*/
@@ -26,7 +39,6 @@ public class CustomerFacade extends AnonymousFacade
     {
         if (this.token.getId()!=customer.getId())
             throw new Exception("You can not update other customers");
-        GenericDAO<Customers> customersDAO = getCustomersDAO();
         if (customer.getId()==null)
             System.out.println("Id must be provided inside the customer. No update was made to the DataBase");
         else

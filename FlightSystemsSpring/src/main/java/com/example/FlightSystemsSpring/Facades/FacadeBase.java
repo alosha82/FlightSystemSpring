@@ -33,6 +33,14 @@ public abstract class FacadeBase
         airlineCompaniesDAO.closeAllDAOConnections();
         return listOfAirlinesByCountry;
     }
+    /**Returns: airline By country. a.k.a getAirlineByCountryId*/
+    public Users getUserByUsername(String username)
+    {
+        GenericDAO<Users> usersDAO = getUsersDAO();
+        Users user=usersDAO.getByFieldType("\'"+username+"\'","Username");
+        usersDAO.closeAllDAOConnections();
+        return user;
+    }
     /**Returns: all flights*/
     public ArrayList<Flights> getAllFlights()
     {
